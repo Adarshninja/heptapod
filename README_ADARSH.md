@@ -1,60 +1,118 @@
-ML4DQM: Implementing Agentic AI for Real-Time Data Quality Monitoring
-Author: Adarsh Bind
-
-# 1. The Reality of DQM in High Energy Physics
-
-In High Energy Physics (HEP), we aren't just dealing with "big data"—we’re dealing with high-velocity streams where even a few minutes of detector malfunction can lead to terabytes of unusable or "garbage" data. Currently, the CMS Data Quality Monitoring (DQM) workflow relies heavily on "shifters"—human operators who manually inspect histograms to spot anomalies.
-
-The pain points are clear:
-
-The Fatigue Factor: Human monitors can miss subtle drifts in detector performance during long shifts.
-
-Volume: The sheer scale of streaming data from the LHC makes 100% manual coverage nearly impossible.
-
-Latency: By the time a human notices a dip in occupancy or a noisy cold crystal, valuable beam time may have already been wasted.
-
-We need a system that doesn't just display data, but understands it.
+📄 ML4DQM: Agentic AI for Data Quality Monitoring
+👤 Author: Adarsh Bind
 
 
-# 2. The Vision: An Agentic Pipeline
+🧠 1. Problem Understanding
 
-I’m proposing ML4DQM, an agentic AI layer designed to sit directly within the CMS DQM workflow. Instead of a passive dashboard, this is an active monitor that:
+Data Quality Monitoring (DQM) in High Energy Physics (HEP) is critical for ensuring the reliability of experimental data collected from detectors.
 
- Observes: Ingests live streams (or simulated equivalents for testing).
+Key challenges:
 
- Evaluates: Uses Unsupervised Learning (Autoencoders/Isolation Forests) to flag deviations from the "Golden" reference runs.
+Continuous high-volume streaming data
+Sensitivity to detector conditions
+Need for real-time anomaly detection
+Heavy reliance on manual monitoring (“shifters”)
 
- Acts: Instead of just throwing an error, it provides context—ranking the severity of the anomaly to help physicists prioritize their intervention.
+👉 This creates a need for:
 
+Automated, intelligent systems that can detect anomalies and assist human operators in real-time
 
-3. Under the Hood: System Architecture
+💡 2. Proposed Solution
 
-The goal isn't just to build a model, but a reproducible pipeline.
+I propose an Agentic AI-based ML pipeline integrated into the CMS DQM workflow that:
 
-Ingestion: Bridging the gap between CMS detector streams and Python-based ML environments.
-
-Feature Engineering: Moving beyond raw hits to statistical features (mean, RMS, kurtosis) and domain-specific histograms.
-
-The Model Layer: * Autoencoders: To learn the "latent representation" of healthy detector data.
-
-Isolation Forests: For rapid, low-latency outlier detection.
-
-Inference & Feedback: A FastAPI-backed engine that scores data in real-time.
-
-
-# 4. Project Roadmap & Tech Stack
-I've structured the project to be modular, ensuring that the ML logic is decoupled from the deployment infrastructure.
-
-![alt text](image.png)
+Continuously ingests detector data
+Applies ML-based anomaly detection
+Provides real-time alerts and insights
+Supports human decision-making
 
 
-5. Deployment Strategy (The "Folder" Logic)
+🏗️ 3. System Architecture
 
-A clean project is a maintainable project. The ml4dqm_proposal/ directory is split into clear domains: ml/ for the "brains," pipelines/ for the "pipes," and monitoring/ for the "alerts." This separation ensures that a researcher can update the model without breaking the data ingestion logic.
+Pipeline Flow:
+Data Ingestion
+CMS detector streams / simulated data
+Preprocessing
+Cleaning, normalization
+Feature Engineering
+Statistical + domain features
+Model Layer
+Isolation Forest / Autoencoder
+Inference Engine
+Real-time anomaly scoring
+Monitoring & Alerts
+Flag anomalies
+Notify operators
 
 
-6. Closing Thoughts
+🧱 4. Proposed Folder Structure
 
-ML4DQM isn't about replacing the physicist; it’s about giving them a "digital twin" that never sleeps. By automating the first line of defense in anomaly detection, we ensure that the data collected at the frontier of physics is as reliable as the theories we’re trying to prove.
+ml4dqm_proposal/
+│
+├── data/
+│   ├── raw/
+│   ├── processed/
+│   └── streaming/
+│
+├── ml/
+│   ├── models/
+│   ├── training/
+│   ├── inference/
+│   └── anomaly_detection/
+│
+├── pipelines/
+│   ├── ingestion.py
+│   ├── preprocessing.py
+│   └── inference_pipeline.py
+│
+├── api/
+│   └── main.py
+│
+├── monitoring/
+│   ├── alerts.py
+│   └── logging.py
+│
+├── configs/
+│   └── config.yaml
+│
+└── deployment/
+    └── docker/
 
-The Prototype: I have already developed a minimal FastAPI-based service. It includes a /predict endpoint that generates anomaly scores on the fly—proving that real-time ML inference in the DQM loop is not just possible, but practical.
+
+⚙️ 5. Technology Stack
+
+| Component          | Tool                   |
+| ------------------ | ---------------------- |
+| ML Models          | PyTorch / scikit-learn |
+| API                | FastAPI                |
+| Data Processing    | Pandas / NumPy         |
+| Visualization      | Streamlit              |
+| Deployment         | Docker                 |
+| Streaming (future) | Kafka                  |
+
+
+
+🔗 6. Integration with HEP DQM Workflow
+
+The proposed system integrates as:
+
+Upstream: receives detector data streams
+Mid-layer: performs ML inference
+Downstream: provides anomaly alerts to physicists
+
+👉 This reduces manual workload and improves detection speed.
+
+
+🚀 7. Prototype (Optional)
+
+A minimal FastAPI-based anomaly detection service is included:
+
+Endpoint: /predict
+Returns anomaly score
+
+This demonstrates feasibility of real-time deployment.
+
+
+🧠 8. Conclusion
+
+This proposal focuses on building a scalable, ML-driven, real-time DQM system that enhances the efficiency of high-energy physics experiments while reducing manual effort.
